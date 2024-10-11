@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Creating a README file for your FastAPI project is an essential step, as it provides necessary information about your project to other developers and users. Below is a template you can use for your README file. You can customize it according to your project's specifics.
 
 ### Example README.md
@@ -112,3 +113,6 @@ git push
 ```
 
 This will help ensure that anyone who views your GitHub repository can easily understand the purpose of your project and how to get started. Let me know if you need any more assistance!
+=======
+# fastapi-assignment
+>>>>>>> origin/main
