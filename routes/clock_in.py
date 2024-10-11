@@ -1,26 +1,58 @@
 from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import List
+from models import ClockInRecord
+from database import db
+from bson import ObjectId
+from datetime import datetime
 
-# Define the router
 router = APIRouter()
 
-# Define a Pydantic model for Clock In data
-class ClockInData(BaseModel):
-    user_id: int
-    timestamp: str  # Use a string for simplicity; consider using a datetime type
+# POST /clock-in
+@router.post("/clock-in")
+def create_clock_in(clock_in: ClockInRecord):
+    clock_in_dict = clock_in.dict()
+    clock_in_dict['insert_datetime'] = datetime.utcnow().isoformat()  # Automatically insert current date and time
+    db.clock_in_records.insert_one(clock_in_dict)
+    return {"message": "Clock-in record created successfully!"}
 
-# Sample in-memory storage
-clock_in_db = []
+# GET /clock-in/{id}
+@router.get("/clock-in/{id}")
+def get_clock_in(id: str):
+    record = db.clock_in_records.find_one({"_id": ObjectId(id)})
+    if not record:
+        raise HTTPException(status_code=404, detail="Clock-in record not found")
+    record['_id'] = str(record['_id'])  # Convert ObjectId to string
+    return record
 
-@router.post("/", response_model=ClockInData)
-async def clock_in(data: ClockInData):
-    clock_in_db.append(data)
-    return data
+# GET /clock-in/filter (for filters)
+@router.get("/clock-in/filter")
+def filter_clock_ins(email: str = None, location: str = None, insert_datetime: str = None):
+    query = {}
+    if email:
+        query['email'] = email
+    if location:
+        query['location'] = location
+    if insert_datetime:
+        query['insert_datetime'] = {"$gte": insert_datetime}
+    
+    records = list(db.clock_in_records.find(query))
+    for record in records:
+        record['_id'] = str(record['_id'])  # Convert ObjectId to string for response
+    return records
 
-@router.get("/{user_id}", response_model=List[ClockInData])
-async def get_clock_in(user_id: int):
-    user_clock_ins = [data for data in clock_in_db if data.user_id == user_id]
-    if not user_clock_ins:
-        raise HTTPException(status_code=404, detail="No clock-in data found for this user")
-    return user_clock_ins
+# DELETE /clock-in/{id}
+@router.delete("/clock-in/{id}")
+def delete_clock_in(id: str):
+    result = db.clock_in_records.delete_one({"_id": ObjectId(id)})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Clock-in record not found")
+    return {"message": "Clock-in record deleted successfully"}
+
+# PUT /clock-in/{id}
+@router.put("/clock-in/{id}")
+def update_clock_in(id: str, clock_in: ClockInRecord):
+    updated_data = clock_in.dict(exclude_unset=True)
+    result = db.clock_in_records.update_one({"_id": ObjectId(id)}, {"$set": updated_data})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="Clock-in record not found")
+    return {"message": "Clock-in record updated successfully"}
+
