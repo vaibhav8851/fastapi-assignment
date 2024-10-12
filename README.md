@@ -1,33 +1,9 @@
-Here’s a draft for your email response and a sample README file:
 
 ---
 
-### **Email Response**:
 
----
 
-**Subject:** Completed FastAPI Assignment Submission
 
-Dear Ankita Shrivastava,
-
-I hope this email finds you well.
-
-I am pleased to submit my FastAPI assignment for the Python Developer position at Vodex.ai. Below are the links to the project:
-
-1. **Swagger Documentation (Local)**: [Swagger UI Local](http://127.0.0.1:8000/docs)
-2. **Hosted Application on Koyeb**: [Koyeb Link](https://app.koyeb.com/services/bfed6fde-6696-403d-a467-3865190d94cd?deploymentId=ce2c646d-dee7-446a-a323-8f0ca74cfde6)
-3. **GitHub Repository**: [GitHub Repo](https://github.com/vaibhav8851/fastapi-assignment)
-
-In the repository, you will find the complete project code along with a `README.md` that explains how to set up and run the project locally, as well as how to access the APIs.
-
-Please let me know if you have any questions or require further information.
-
-Thank you for the opportunity to showcase my skills. I look forward to your feedback.
-
-Best regards,  
-Vaibhav
-
----
 
 ### **README.md**:
 
@@ -120,4 +96,3 @@ The application supports the following APIs:
 
 ---
 
-Let me know if you need further modifications or clarification!
